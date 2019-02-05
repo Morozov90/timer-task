@@ -1,0 +1,7 @@
+export const ADD_TASK = 'ADD_TASK';
+export const FINISH_TASK = 'FINISH_TASK';
+export const REMOVE_TASK = 'REMOVE_TASK';
+export const REMOVE_ALL_TASKS = 'REMOVE_ALL_TASKS';
+export const GET_TASKS_REQUEST = 'GET_TASKS_REQUEST';
+export const GET_TASKS_SUCCESS = 'GET_TASKS_SUCCESS';
+export const GET_TASKS_FAILURE = 'GET_TASKS_FAILURE';
