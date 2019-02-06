@@ -18,7 +18,6 @@ import Button from '@material-ui/core/Button'
 const styles = {
   container: {
     padding: '20px',
-    marginTop: '30px'
   },
   button: {
     marginTop: '50px'

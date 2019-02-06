@@ -29,9 +29,6 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center'
   },
-  button: {
-    marginBottom: '20px',
-  },
   timer: {
     margin: '30px',
     width: '140px',
@@ -40,6 +37,16 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
+    color: '#3248c7',
+    fontSize: '1.5rem'
+  },
+  textField: {
+    color: '#3248c7'
+  },
+  button: {
+    color: '#3248c7',
+    marginBottom: '20px',
+    background: '#ffffff'
   }
 };
 
@@ -135,11 +142,11 @@ export class Timer extends React.Component {
       <div className={classes.container}>
         <TextField
           id="standard-name"
-          label="Name"
-          className={classes.textField}
+          label="Name of your task"
           value={taskName}
           onChange={this.handleChangeName}
           margin="normal"
+          InputLabelProps={{className: classes.textField}}
         />
         <Paper className={classes.timer}>
           {time}

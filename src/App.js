@@ -9,6 +9,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
 //components
 import Timer from './components/Timer';
@@ -20,13 +21,21 @@ import Task from './components/Task';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 
+const styles = {
+  appBar: {
+    background: '#00bcd4',
+  },
+};
+
 function LinkTab(props) {
   return <Tab component={Link} {...props} />;
 }
 
+
 class App extends React.Component {
   static propTypes = {
-    info: PropTypes.object.isRequired
+    info: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
   };
   
   state = {
@@ -68,18 +77,25 @@ class App extends React.Component {
   
   render() {
     const { value } = this.state;
+    const { classes, location } = this.props;
+    const showAppBar = !location.pathname.includes('/tasks/');
     return (
       <Grid container justify="center">
         <Grid item xs={10}>
           <Timer/>
         </Grid>
         <Grid item xs={10}>
-          <AppBar position="static">
+          {showAppBar &&
+          <AppBar
+            position="static"
+            className={classes.appBar}
+          >
             <Tabs variant="fullWidth" value={value} onChange={this.handleChange}>
               <LinkTab to='/' label="Tasks Log"/>
               <LinkTab to='/chart' label="Tasks Chart" />
             </Tabs>
           </AppBar>
+          }
           <Switch>
             <Route path='/' component={Home} exact />
             <Route path='/chart' component={Chart} />
@@ -98,5 +114,6 @@ const mapStateToProps = state => ({
 
 export default compose(
   withRouter,
+  withStyles(styles),
   connect(mapStateToProps, null),
 )(App);
