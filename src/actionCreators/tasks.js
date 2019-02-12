@@ -16,12 +16,10 @@ export const addTask = (id, timeStart) => ({
   }
 });
 
-export const finishTask = (id, name, timeEnd) => ({
+export const finishTask = (obj) => ({
   type: FINISH_TASK,
   payload: {
-    id,
-    name,
-    timeEnd,
+    ...obj
   }
 });
 

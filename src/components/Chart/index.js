@@ -34,42 +34,33 @@ export class Timer extends React.Component {
     removeAllTasks: PropTypes.func.isRequired,
     getTasksRequest: PropTypes.func.isRequired,
     isLoading: PropTypes.bool,
-    error: PropTypes.bool
+    error: PropTypes.bool,
+    currentTask: PropTypes.object,
   };
   
-  state = {
-    isRunning: false
-  };
   
-  componentWillMount() {
-    const {tasks} = this.props;
-    const currentTask = _.find(tasks, {'isRunning': true});
-    this.setState( {
-      isRunning: !!currentTask
-    })
+  constructor(props) {
+    super(props);
+    this.data = [];
+    _.times(24, (index) => {
+      this.data.push({ hours: index, timeSpend: 0 });
+    });
   }
   
-  componentWillReceiveProps(nextProps, nextContext) {
-    const tasks = _.get(nextProps, 'tasks')
-    const currentTask = _.find(tasks, {'isRunning': true});
-    this.setState( {
-      isRunning: !!currentTask
-    })
+  componentWillUpdate() {
+    this.data = [];
+    _.times(24, (index) => {
+      this.data.push({ hours: index, timeSpend: 0 });
+    });
   }
   
   render() {
-    const { classes, tasks, isLoading, error, getTasksRequest } = this.props;
-    const { isRunning } = this.state;
+    const { classes, tasks, isLoading, error, getTasksRequest, currentTask } = this.props;
     
     const getData = () => getTasksRequest();
     
-    const data = [];
     const startDay = moment().startOf('day').toDate();
     const endDay = moment().endOf('day').toDate();
-    
-    _.times(24, (index) => {
-      data.push({ hours: index, timeSpend: 0 });
-    });
   
     tasks.forEach(task => {
       const startTask = moment(task.timeStart);
@@ -85,7 +76,7 @@ export class Timer extends React.Component {
       
       if ((moment(startTask.toDate()).isBetween(startDay, endDay)) && (moment(endTask.toDate()).isBetween(startDay, endDay))) {
         for (let i = timeStart.hour; i <= timeEnd.hour; i++) {
-          data[i].timeSpend += (timeStart.hour === timeEnd.hour)
+          this.data[i].timeSpend += (timeStart.hour === timeEnd.hour)
             ? timeEnd.minute - timeStart.minute
             : (i === timeStart.hour)
               ? 60 - timeStart.minute
@@ -108,7 +99,7 @@ export class Timer extends React.Component {
       <React.Fragment>
         <Paper className={classes.container}>
           <ResponsiveContainer width="100%" height={300} >
-            <BarChart data={data} style={{ paddingTop: "20px" }} margin={{ bottom: 25, right: 20 }}>
+            <BarChart data={this.data} style={{ paddingTop: "20px" }} margin={{ bottom: 25, right: 20 }}>
               <CartesianGrid/>
               <XAxis dataKey="hours"/>
               <YAxis ticks={[0, 15, 30, 45, 60]} />
@@ -124,7 +115,7 @@ export class Timer extends React.Component {
             </BarChart>
           </ResponsiveContainer>
           <div className={classes.buttonWrapper}>
-            <Button variant="contained" disabled={isRunning} onClick={getData} color="primary" className={classes.button}>
+            <Button variant="contained" disabled={!!currentTask} onClick={getData} color="primary" className={classes.button}>
               Generate tasks
             </Button>
           </div>
@@ -135,7 +126,8 @@ export class Timer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  tasks: state.info.tasks
+  tasks: state.info.tasks,
+  currentTask: state.info.currentTask
 });
 
 const mapDispatchToProps = {

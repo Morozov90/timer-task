@@ -27,19 +27,15 @@ class Task extends React.Component {
     tasks: PropTypes.array.isRequired,
   };
   
-  state = {
-    tasks: {}
-  };
-  
-  componentWillMount() {
-    const { match, tasks } = this.props;
-    if (_.find(tasks, { 'id': match.params.id })) {
-      this.setState(() => ({
-        task: _.find(tasks, { 'id': match.params.id })
-      }));
+  constructor (props) {
+    super(props);
+    if (_.find(props.tasks, { 'id': props.match.params.id })) {
+      this.state = {
+        task: _.find(props.tasks, { 'id': props.match.params.id })
+      };
     } else {
       this.render = () => false;
-      this.props.history.push('/');
+      props.history.push('/');
     }
   }
   

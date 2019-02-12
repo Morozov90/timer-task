@@ -20,25 +20,18 @@ export default (state = initialState, action) => {
     case ADD_TASK:
       return {
         ...state,
-        tasks: [ ...state.tasks,
-        {
+        currentTask: {
           id: action.payload.id,
           timeStart: action.payload.timeStart,
           isRunning: true
-        }
-        ]
+        },
+        tasks: [ ...state.tasks ]
       };
     case FINISH_TASK:
       return {
         ...state,
-        tasks: state.tasks.map(item => {
-          if (item.id === action.payload.id) {
-            item.name = action.payload.name;
-            item.timeEnd = action.payload.timeEnd;
-            item.isRunning = false
-          }
-          return item;
-        })
+        currentTask: undefined,
+        tasks: [ ...state.tasks, { ...action.payload, isRunning: false } ]
       };
       
     case REMOVE_TASK:

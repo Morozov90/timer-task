@@ -67,7 +67,6 @@ class Home extends React.Component {
   
   render() {
     const { classes, tasks } = this.props;
-    const finishedTasks = tasks.filter(elem => !elem.isRunning);
     
     return (
       <React.Fragment>
@@ -85,7 +84,7 @@ class Home extends React.Component {
               </TableRow>
             </TableHead>
             <TableBody classes={{root: classes.tableBody}}>
-              {finishedTasks.map((row, index )=> {
+              {tasks.map((row, index )=> {
                 const deleteItem = () => this.handleDeleteItem(row.id);
                 const timeStart = moment(row.timeStart).format("HH:mm:ss");
                 const timeEnd = row.timeEnd ? moment(row.timeEnd).format("HH:mm:ss") : '-';
@@ -109,7 +108,7 @@ class Home extends React.Component {
                       </Button>
                     </TableCell>
                     <TableCell align="center" classes={{root: classes.tableCell}}>
-                      <Button variant="contained" disabled={row.isRunning} onClick={deleteItem} className={classes.button}>
+                      <Button variant="contained" onClick={deleteItem} className={classes.button}>
                         Delete
                       </Button>
                     </TableCell>

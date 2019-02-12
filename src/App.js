@@ -58,7 +58,8 @@ class App extends React.Component {
     });
   };
   
-  componentWillMount() {
+  componentDidMount() {
+    this.setupBeforeUnloadListener();
     if (this.props.location.pathname === '/chart') {
       this.setState({
         value: 1,
@@ -66,12 +67,7 @@ class App extends React.Component {
     }
   }
   
-  componentDidMount() {
-    this.setupBeforeUnloadListener();
-  }
-  
   handleChange = (event, value) => {
-  
     this.setState({ value });
   };
   

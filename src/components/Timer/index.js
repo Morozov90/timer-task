@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import _ from 'lodash';
 
 // material-ui
 import { withStyles } from '@material-ui/core/styles';
@@ -56,6 +55,7 @@ export class Timer extends React.Component {
     tasks: PropTypes.array.isRequired,
     addTask: PropTypes.func.isRequired,
     finishTask: PropTypes.func.isRequired,
+    currentTask: PropTypes.object,
   };
   
   constructor(props) {
@@ -84,10 +84,8 @@ export class Timer extends React.Component {
     this.setState({ open: false });
   };
   
-  componentWillMount() {
-    const { tasks } = this.props;
-    const currentTask = _.find(tasks, { 'isRunning': true });
-    
+  componentDidMount() {
+    const { currentTask } = this.props;
     if (currentTask) {
       const diffSeconds = moment().diff(moment(currentTask.timeStart), 's');
       this.setState({
@@ -114,11 +112,10 @@ export class Timer extends React.Component {
   
   handleStopTimer = () => {
     const { taskName } = this.state;
-    const { tasks, finishTask } = this.props;
+    const { finishTask, currentTask } = this.props;
     
     if (taskName !== '') {
-      const currentTask = _.find(tasks, { 'isRunning': true });
-      finishTask(currentTask.id, taskName, moment().valueOf());
+      finishTask({...currentTask, name: taskName, timeEnd: moment().valueOf()});
       clearInterval(this.interval);
       this.setState(() => ({
         seconds: 0,
@@ -187,7 +184,8 @@ export class Timer extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  tasks: state.info.tasks
+  tasks: state.info.tasks,
+  currentTask: state.info.currentTask
 });
 
 const mapDispatchToProps = {
